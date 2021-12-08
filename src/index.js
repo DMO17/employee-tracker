@@ -1,6 +1,20 @@
+const db = require("./connection");
+
 const displayDepartments = () => {
   // execute mysql query
   // log/table departments
+
+  const query = "SELECT * FROM department";
+
+  db.query(query, (err, result) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    console.table(result);
+    db.end();
+  });
 };
 
 const displayRoles = () => {
