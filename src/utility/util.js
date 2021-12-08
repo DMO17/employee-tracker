@@ -12,4 +12,15 @@ const declareSqlQuery = (sqlQuery) => {
   });
 };
 
-module.exports = declareSqlQuery;
+const displayChosenMySqlResultsTable = ({
+  homeMenu,
+  displayDepartments,
+  displayRoles,
+  displayEmployees,
+}) => {
+  if (homeMenu === "viewAllDepartments") return displayDepartments();
+  if (homeMenu === "viewAllRoles") return displayRoles();
+  if (homeMenu === "viewAllEmployees") return displayEmployees();
+};
+
+module.exports = { declareSqlQuery, displayChosenMySqlResultsTable };

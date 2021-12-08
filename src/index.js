@@ -1,5 +1,11 @@
+const inquirer = require("inquirer");
+
 const { query } = require("./connection");
-const declareSqlQuery = require("./utility/util");
+const { menu } = require("./utility/questions");
+const {
+  declareSqlQuery,
+  displayChosenMySqlResultsTable,
+} = require("./utility/util");
 
 const displayDepartments = () => {
   // execute mysql query
@@ -69,13 +75,20 @@ const constructEmployeeChoices = (roles) => {
   // return an array of employee choices
 };
 
-const start = () => {
+const start = async () => {
   // declare one question with list of actions
   // prompt question and get answer (action)
   // insert if blocks for all actions
-  // if displayDepartments()
-  // if displayRoles()
-  // if displayEmployees()
+
+  const { homeMenu } = await inquirer.prompt(menu);
+
+  displayChosenMySqlResultsTable({
+    homeMenu,
+    displayDepartments,
+    displayRoles,
+    displayEmployees,
+  });
+
   if ("addDepartment") {
     // prompt department questions (name) and get answers
     // construct mysql insert query
