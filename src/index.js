@@ -1,5 +1,5 @@
 const { query } = require("./connection");
-const declareSqlQuery = require("./util");
+const declareSqlQuery = require("./utility/util");
 
 const displayDepartments = () => {
   // execute mysql query
@@ -33,16 +33,28 @@ const displayEmployees = () => {
 const getDepartments = () => {
   // execute mysql query
   // return departments
+
+  const query = "SELECT name FROM department";
+
+  declareSqlQuery(query);
 };
 
 const getRoles = () => {
   // execute mysql query
   // return roles
+
+  const query = "SELECT title FROM role";
+
+  declareSqlQuery(query);
 };
 
 const getEmployees = () => {
   // execute mysql query
   // return employees
+
+  const query = "SELECT first_name , last_name FROM employee";
+
+  declareSqlQuery(query);
 };
 
 const constructDepartmentChoices = (departments) => {
@@ -56,18 +68,6 @@ const constructRoleChoices = (roles) => {
 const constructEmployeeChoices = (roles) => {
   // return an array of employee choices
 };
-
-// const db = mysql.createConnection(
-//   {
-//     host: 'localhost',
-//     // MySQL username,
-//     user: 'root',
-//     // MySQL password
-//     password: '',
-//     database: 'classlist_db',
-//   },
-//   console.log(`Connected to the classlist_db database.`)
-// );
 
 const start = () => {
   // declare one question with list of actions

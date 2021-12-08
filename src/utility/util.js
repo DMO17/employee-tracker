@@ -1,4 +1,4 @@
-const db = require("./connection");
+const db = require("../connection");
 
 const declareSqlQuery = (sqlQuery) => {
   return db.query(sqlQuery, (err, result) => {
