@@ -74,14 +74,14 @@ const userActionAddDepartment = (departmentName) => {
   declareSqlQuery(query);
 };
 
-const userActionAddRole = (roleName, salary) => {
-  const query = `USE company_db ; INSERT INTO role (title , salary) VALUES ( '${roleName}' , ${salary} )`;
+const userActionAddRole = (roleName, salary, departmentId) => {
+  const query = `USE company_db ; INSERT INTO role (title , salary , department_id) VALUES ( '${roleName}' , ${salary} ,  ${departmentId})`;
 
   declareSqlQuery(query);
 };
 
-const userActionAddEmployee = (employeeName) => {
-  const query = `USE company_db ; INSERT INTO department (name) VALUES ( '${departmentName}' )`;
+const userActionAddEmployee = (firstName, secondName, roleId, departmentId) => {
+  const query = `USE company_db ; INSERT INTO employee (first_name , last_name , role_id , department_id ) VALUES ( '${firstName}'  ,'${secondName}' , '${roleId}'), '${departmentId}'`;
 
   declareSqlQuery(query);
 };
@@ -92,6 +92,7 @@ module.exports = {
   displayEmployees,
   userActionAddDepartment,
   userActionAddRole,
+  userActionAddEmployee,
   getDepartments,
   getRoles,
   getEmployees,

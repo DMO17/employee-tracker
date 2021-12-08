@@ -8,6 +8,8 @@ const {
   getRoles,
   getDepartments,
   userActionAddRole,
+  getEmployees,
+  userActionAddEmployee,
 } = require("./utility/mysql");
 
 const {
@@ -51,9 +53,14 @@ const start = async () => {
   }
 
   if (homeMenu === "addEmployee") {
-    const { roleTitle, roleSalary } = await inquirer.prompt(addRole);
+    getDepartments();
+    getRoles();
+    getEmployees();
 
-    userActionAddRole(roleTitle, roleSalary);
+    const { firstName, secondName, departmentId, roleId } =
+      await inquirer.prompt(addRole);
+
+    userActionAddEmployee(firstName, secondName, roleId, departmentId);
   }
 
   const { exitApp } = await inquirer.prompt(exitApplication);

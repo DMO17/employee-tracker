@@ -39,6 +39,39 @@ const addRole = [
     message: "Enter the salary for that role",
     validate: verifyNumber,
   },
+  {
+    type: "input",
+    name: "departmentId",
+    message: "Which department is this role linked to?",
+    validate: verifyNumber,
+  },
+];
+
+const addEmployee = [
+  {
+    type: "input",
+    name: "firstName",
+    message: "Enter the employees first name",
+    validate: verifyResponses,
+  },
+  {
+    type: "input",
+    name: "secondName",
+    message: "Enter the employees second name",
+    validate: verifyResponses,
+  },
+  {
+    type: "input",
+    name: "departmentId",
+    message: "Which department (id) does this employee belong to?",
+    validate: verifyNumber,
+  },
+  {
+    type: "input",
+    name: "roleId",
+    message: "Which role (id) does this employee work as?",
+    validate: verifyResponses,
+  },
 ];
 
 const exitApplication = [
@@ -49,4 +82,4 @@ const exitApplication = [
   },
 ];
 
-module.exports = { menu, exitApplication, addDepartment, addRole };
+module.exports = { menu, exitApplication, addDepartment, addRole, addEmployee };
