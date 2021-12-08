@@ -1,4 +1,5 @@
-const db = require("./connection");
+const { query } = require("./connection");
+const declareSqlQuery = require("./util");
 
 const displayDepartments = () => {
   // execute mysql query
@@ -6,25 +7,27 @@ const displayDepartments = () => {
 
   const query = "SELECT * FROM department";
 
-  db.query(query, (err, result) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-
-    console.table(result);
-    db.end();
-  });
+  declareSqlQuery(query);
 };
 
 const displayRoles = () => {
   // execute mysql query
   // log/table roles
+
+  const query =
+    "SELECT role.id, role.title, role.salary, department.name FROM role JOIN department ON role.department_id = department.id ORDER BY department.name;";
+
+  declareSqlQuery(query);
 };
 
 const displayEmployees = () => {
   // execute mysql query
   // log/table employees
+
+  const query =
+    "SELECT employee_role.first_name, employee_role.last_name, title, salary, name FROM employee employee_role LEFT JOIN role ON employee_role.role_id=role.id LEFT JOIN department ON role.department_id=department.id;";
+
+  declareSqlQuery(query);
 };
 
 const getDepartments = () => {
