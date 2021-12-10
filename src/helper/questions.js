@@ -21,7 +21,7 @@ const menu = [
 const addDepartment = [
   {
     type: "input",
-    name: "addDepartmentDetails",
+    name: "departmentName",
     message: "Enter the department name",
     validate: verifyResponses,
   },

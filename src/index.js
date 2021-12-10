@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 
 const Db = require("./connection/connection");
-const { menu } = require("./helper/questions");
+const { menu, addDepartment } = require("./helper/questions");
 
 const db = new Db({
   host: process.envDB_HOST || "localhost",
@@ -40,6 +40,15 @@ const start = async () => {
         "SELECT employee_role.first_name, employee_role.last_name, title, salary, name FROM employee employee_role LEFT JOIN role ON employee_role.role_id=role.id LEFT JOIN department ON role.department_id=department.id;"
       );
       console.table(listOfEmployees);
+    }
+
+    // add department
+    if (homeMenu === "addDepartment") {
+      const { departmentName } = await inquirer.prompt(addDepartment);
+
+      const addDepartmentNameToTable = await db.query(
+        `INSERT INTO department(name) VALUE("${departmentName}";)`
+      );
     }
 
     // If user wants the leave the app
