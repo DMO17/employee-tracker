@@ -1,8 +1,10 @@
 const inquirer = require("inquirer");
 
 const Db = require("./connection/connection");
+
 const { menu, addDepartment } = require("./helper/questions");
 
+//create a new instance of the Db class
 const db = new Db({
   host: process.envDB_HOST || "localhost",
   user: process.envDB_USER || "root",
@@ -48,6 +50,51 @@ const start = async () => {
 
       const addDepartmentNameToTable = await db.query(
         `INSERT INTO department(name) VALUE("${departmentName}";)`
+      );
+    }
+
+    // add role
+    if (homeMenu === "addRole") {
+      // present the list of departments to add a role to from the company_db table
+
+      const generateDepartmentChoices = (departmentsFromDB) => {
+        return departmentsFromDB.map((department) => {
+          return {
+            name: department.name,
+            value: department.id,
+          };
+        });
+      };
+
+      const departments = await db.query("SELECT * FROM department");
+
+      //create the inquirer questions areray
+      const roleQuestions = [
+        {
+          type: "list",
+          message: "Please select a department:",
+          name: "departmentId",
+          choices: generateDepartmentChoices(departments),
+        },
+        {
+          type: "input",
+          message: "Enter the role title:",
+          name: "title",
+        },
+        {
+          type: "input",
+          message: "Enter the salary for that role:",
+          name: "salary",
+        },
+      ];
+
+      // prompt the questions needed for the details of the role
+      const { title, salary, departmentId } = await inquirer.prompt(
+        roleQuestions
+      );
+      // Add the user answers to the role table
+      const addRoleDetailsToTable = await db.query(
+        `INSERT INTO role (title, salary, department_id) VALUES("${title}", ${salary}, ${departmentId})`
       );
     }
 
