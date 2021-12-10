@@ -12,6 +12,24 @@ const db = new Db({
   database: process.envDB_NAME || "company_db",
 });
 
+const generateDepartmentChoices = (departmentsFromDB) => {
+  return departmentsFromDB.map((department) => {
+    return {
+      name: department.name,
+      value: department.id,
+    };
+  });
+};
+
+const generateRoleChoices = (rolesFromDB) => {
+  return rolesFromDB.map((roles) => {
+    return {
+      name: roles.title,
+      value: roles.id,
+    };
+  });
+};
+
 const start = async () => {
   let inProgress = true;
 
@@ -57,15 +75,6 @@ const start = async () => {
     if (homeMenu === "addRole") {
       // present the list of departments to add a role to from the company_db table
 
-      const generateDepartmentChoices = (departmentsFromDB) => {
-        return departmentsFromDB.map((department) => {
-          return {
-            name: department.name,
-            value: department.id,
-          };
-        });
-      };
-
       const departments = await db.query("SELECT * FROM department");
 
       //create the inquirer questions areray
@@ -100,6 +109,44 @@ const start = async () => {
 
     // add EMPLOYEE
     if (homeMenu === "addEmployee") {
+      // present a list of departments to choose from
+      const departments = await db.query("SELECT * FROM department");
+      // present a list of roles to choose from
+      const roles = await db.query("SELECT id ,title FROM role");
+      // prompt the questions to for the employees data
+      const roleQuestions = [
+        {
+          type: "list",
+          message: "Please select a department:",
+          name: "departmentId",
+          choices: generateDepartmentChoices(departments),
+        },
+        {
+          type: "list",
+          message: "Please select a role:",
+          name: "roleId",
+          choices: generateRoleChoices(roles),
+        },
+        {
+          type: "input",
+          message: "Enter First Name:",
+          name: "firstName",
+        },
+        {
+          type: "input",
+          message: "Enter Second Name:",
+          name: "secondName",
+        },
+      ];
+
+      const { departmentId, roleId, firstName, secondName } =
+        await inquirer.prompt(roleQuestions);
+
+      console.log(departmentId, roleId, firstName, secondName);
+    }
+
+    // update Employee details
+    if (homeMenu === updateEmployeeRole) {
     }
 
     // Exit Application
