@@ -13,6 +13,7 @@ const menu = [
       { name: "Add Role", value: "addRole" },
       { name: "Add Employee", value: "addEmployee" },
       { name: "Update Employee Role", value: "updateEmployeeRole" },
+      { name: "Exit Application", value: "exitApp" },
     ],
   },
 ];

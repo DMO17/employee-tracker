@@ -1,72 +1,53 @@
 const inquirer = require("inquirer");
 
-const {
-  displayDepartments,
-  displayEmployees,
-  displayRoles,
-  userActionAddDepartment,
-  getRoles,
-  getDepartments,
-  userActionAddRole,
-  getEmployees,
-  userActionAddEmployee,
-} = require("./utility/mysql");
+const Db = require("./connection/connection");
+const { menu } = require("./helper/questions");
 
-const {
-  menu,
-  exitApplication,
-  addDepartment,
-  addRole,
-} = require("./utility/questions");
-
-const { displayChosenMySqlResultsTable } = require("./utility/util");
-
-/////////////////////////////////////////////////////////////////////
+const db = new Db({
+  host: process.envDB_HOST || "localhost",
+  user: process.envDB_USER || "root",
+  password: process.envDB_PASSWORD || "Password123!!",
+  database: process.envDB_NAME || "company_db",
+});
 
 const start = async () => {
   let inProgress = true;
 
-  // while (inProgress) {
+  while (inProgress) {
+    // start the connection to the mysql database
+    await db.start();
 
-  const { homeMenu } = await inquirer.prompt(menu);
+    // prompt a list of actions the user can perform
+    const { homeMenu } = await inquirer.prompt(menu);
 
-  const displayUserViewAction = displayChosenMySqlResultsTable({
-    homeMenu,
-    displayDepartments,
-    displayRoles,
-    displayEmployees,
-  });
+    // view list of all DEPARTMENT
+    if (homeMenu === "viewAllDepartments") {
+      const listOfDepartments = await db.query("SELECT * FROM department");
+      console.table(listOfDepartments);
+    }
 
-  if (homeMenu === "addDepartment") {
-    const { addDepartmentDetails } = await inquirer.prompt(addDepartment);
+    // view list of all ROLES
+    if (homeMenu === "viewAllRoles") {
+      const listOfRoles = await db.query(
+        "SELECT role.id, role.title, role.salary, department.name FROM role JOIN department ON role.department_id = department.id ORDER BY department.name;"
+      );
+      console.table(listOfRoles);
+    }
 
-    userActionAddDepartment(addDepartmentDetails);
+    // view list of all Employees
+    if (homeMenu === "viewAllEmployees") {
+      const listOfEmployees = await db.query(
+        "SELECT employee_role.first_name, employee_role.last_name, title, salary, name FROM employee employee_role LEFT JOIN role ON employee_role.role_id=role.id LEFT JOIN department ON role.department_id=department.id;"
+      );
+      console.table(listOfEmployees);
+    }
+
+    // If user wants the leave the app
+    if (homeMenu === "exitApp") {
+      db.stop();
+      return inProgress === false;
+    }
   }
-
-  if (homeMenu === "addRole") {
-    // getDepartments();
-    // getRoles();
-
-    const { roleTitle, roleSalary } = await inquirer.prompt(addRole);
-
-    userActionAddRole(roleTitle, roleSalary);
-  }
-
-  if (homeMenu === "addEmployee") {
-    getDepartments();
-    getRoles();
-    getEmployees();
-
-    const { firstName, secondName, departmentId, roleId } =
-      await inquirer.prompt(addRole);
-
-    userActionAddEmployee(firstName, secondName, roleId, departmentId);
-  }
-
-  const { exitApp } = await inquirer.prompt(exitApplication);
-
-  if (exitApp) return inProgress === false;
-  // };
 };
 
 start();
