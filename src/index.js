@@ -4,7 +4,7 @@ const Db = require("./connection/connection");
 
 const { menu, addDepartment } = require("./helper/questions");
 
-//create a new instance of the Db class
+//create a new instance of the Db class to use the start , stop and query methods
 const db = new Db({
   host: process.envDB_HOST || "localhost",
   user: process.envDB_USER || "root",
@@ -44,7 +44,7 @@ const start = async () => {
       console.table(listOfEmployees);
     }
 
-    // add department
+    // add DEPARTMENT
     if (homeMenu === "addDepartment") {
       const { departmentName } = await inquirer.prompt(addDepartment);
 
@@ -53,7 +53,7 @@ const start = async () => {
       );
     }
 
-    // add role
+    // add ROLE
     if (homeMenu === "addRole") {
       // present the list of departments to add a role to from the company_db table
 
@@ -98,8 +98,13 @@ const start = async () => {
       );
     }
 
-    // If user wants the leave the app
+    // add EMPLOYEE
+    if (homeMenu === "addEmployee") {
+    }
+
+    // Exit Application
     if (homeMenu === "exitApp") {
+      // If user wants the leave the app
       db.stop();
       return inProgress === false;
     }
