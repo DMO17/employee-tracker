@@ -111,16 +111,27 @@ const start = async () => {
     if (homeMenu === "addEmployee") {
       // present a list of departments to choose from
       const departments = await db.query("SELECT * FROM department");
-      // present a list of roles to choose from
-      const roles = await db.query("SELECT id ,title FROM role");
-      // prompt the questions to for the employees data
-      const roleQuestions = [
+
+      //   prompt the questions to for the department of of the employee
+
+      const departmentQuestion = [
         {
           type: "list",
           message: "Please select a department:",
           name: "departmentId",
           choices: generateDepartmentChoices(departments),
         },
+      ];
+
+      const { departmentId } = await inquirer.prompt(departmentQuestion);
+
+      // list the roles for that specific department
+
+      const roles = await db.query(
+        `SELECT id ,title FROM role WHERE department_id = ${departmentId}`
+      );
+
+      const roleQuestions = [
         {
           type: "list",
           message: "Please select a role:",
@@ -139,14 +150,11 @@ const start = async () => {
         },
       ];
 
-      const { departmentId, roleId, firstName, secondName } =
-        await inquirer.prompt(roleQuestions);
+      const { roleId, firstName, secondName } = await inquirer.prompt(
+        roleQuestions
+      );
 
       console.log(departmentId, roleId, firstName, secondName);
-    }
-
-    // update Employee details
-    if (homeMenu === updateEmployeeRole) {
     }
 
     // Exit Application

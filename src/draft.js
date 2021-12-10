@@ -113,3 +113,21 @@ if (homeMenu === "addRole") {
     `INSERT INTO role (title, salary, department_id) VALUES("${title}", ${salary}, ${departmentId})`
   );
 }
+
+// present a list of departments to choose from
+const departments = await db.query("SELECT * FROM department");
+
+//   prompt the questions to for the department of of the employee
+
+const departmentQuestion = [
+  {
+    type: "list",
+    message: "Please select a department:",
+    name: "departmentId",
+    choices: generateDepartmentChoices(departments),
+  },
+];
+
+const { departmentId } = await inquirer.prompt(departmentQuestion);
+
+// list the roles for that specific department
