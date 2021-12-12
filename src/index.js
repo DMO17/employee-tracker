@@ -13,7 +13,10 @@ const {
   addDepartment,
   sectionToUpdate,
   updateEmployeeName,
-} = require("./inquirerQuestions/questions");
+  constructRoleQuestions,
+  constructDepartmentQuestions,
+  constructEmployeeQuestions,
+} = require("./questions/questions");
 
 //create a new instance of the Db class to use the start , stop and query methods
 const db = new Db({
@@ -71,24 +74,10 @@ const start = async () => {
       const departments = await db.query("SELECT * FROM department");
 
       //create the inquirer questions areray
-      const roleQuestions = [
-        {
-          type: "list",
-          message: "Please select a department:",
-          name: "departmentId",
-          choices: generateDepartmentChoices(departments),
-        },
-        {
-          type: "input",
-          message: "Enter the role title:",
-          name: "title",
-        },
-        {
-          type: "input",
-          message: "Enter the salary for that role:",
-          name: "salary",
-        },
-      ];
+      const roleQuestions = constructRoleQuestions(
+        generateDepartmentChoices,
+        departments
+      );
 
       // prompt the questions needed for the details of the role
       const { title, salary, departmentId } = await inquirer.prompt(
@@ -107,14 +96,10 @@ const start = async () => {
 
       //   prompt the questions to for the department of of the employee
 
-      const departmentQuestion = [
-        {
-          type: "list",
-          message: "Please select a department:",
-          name: "departmentId",
-          choices: generateDepartmentChoices(departments),
-        },
-      ];
+      const departmentQuestion = constructDepartmentQuestions(
+        generateDepartmentChoices,
+        departments
+      );
 
       const { departmentId } = await inquirer.prompt(departmentQuestion);
 
@@ -124,24 +109,10 @@ const start = async () => {
         `SELECT id ,title FROM role WHERE department_id = ${departmentId}`
       );
 
-      const roleQuestions = [
-        {
-          type: "list",
-          message: "Please select a role:",
-          name: "roleId",
-          choices: generateRoleChoices(roles),
-        },
-        {
-          type: "input",
-          message: "Enter First Name:",
-          name: "firstName",
-        },
-        {
-          type: "input",
-          message: "Enter Second Name:",
-          name: "secondName",
-        },
-      ];
+      const roleQuestions = constructEmployeeQuestions(
+        generateRoleChoices,
+        roles
+      );
 
       const { roleId, firstName, secondName } = await inquirer.prompt(
         roleQuestions

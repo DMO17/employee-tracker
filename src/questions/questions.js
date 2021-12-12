@@ -1,4 +1,4 @@
-const { verifyResponses, verifyNumber } = require("./util");
+const { verifyResponses, verifyNumber } = require("../helper/util");
 
 const menu = [
   {
@@ -53,9 +53,68 @@ const updateEmployeeName = [
   },
 ];
 
+const constructRoleQuestions = (generateDepartmentChoices, departments) => {
+  return [
+    {
+      type: "list",
+      message: "Please select a department:",
+      name: "departmentId",
+      choices: generateDepartmentChoices(departments),
+    },
+    {
+      type: "input",
+      message: "Enter the role title:",
+      name: "title",
+    },
+    {
+      type: "input",
+      message: "Enter the salary for that role:",
+      name: "salary",
+    },
+  ];
+};
+
+const constructDepartmentQuestions = (
+  generateDepartmentChoices,
+  departments
+) => {
+  return [
+    {
+      type: "list",
+      message: "Please select a department:",
+      name: "departmentId",
+      choices: generateDepartmentChoices(departments),
+    },
+  ];
+};
+
+const constructEmployeeQuestions = (generateRoleChoices, roles) => {
+  return [
+    {
+      type: "list",
+      message: "Please select a role:",
+      name: "roleId",
+      choices: generateRoleChoices(roles),
+    },
+    {
+      type: "input",
+      message: "Enter First Name:",
+      name: "firstName",
+    },
+    {
+      type: "input",
+      message: "Enter Second Name:",
+      name: "secondName",
+    },
+  ];
+};
+
 module.exports = {
   menu,
   addDepartment,
   sectionToUpdate,
   updateEmployeeName,
+  constructRoleQuestions,
+  constructDepartmentQuestions,
+  constructEmployeeQuestions,
 };
