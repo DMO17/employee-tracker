@@ -2,7 +2,12 @@ const inquirer = require("inquirer");
 
 const Db = require("./connection/connection");
 
-const { menu, addDepartment } = require("./helper/questions");
+const {
+  menu,
+  addDepartment,
+  sectionToUpdate,
+  updateEmployeeName,
+} = require("./helper/questions");
 
 //create a new instance of the Db class to use the start , stop and query methods
 const db = new Db({
@@ -26,6 +31,15 @@ const generateRoleChoices = (rolesFromDB) => {
     return {
       name: roles.title,
       value: roles.id,
+    };
+  });
+};
+
+const generateEmployeeChoices = (employeesFromDB) => {
+  return employeesFromDB.map((employee) => {
+    return {
+      name: `${employee.first_name} ${employee.last_name}: ${employee.name} `,
+      value: [employee.id, employee.department_id],
     };
   });
 };
@@ -154,11 +168,71 @@ const start = async () => {
         roleQuestions
       );
 
-      console.log(departmentId, roleId, firstName, secondName);
+      const addEmployeeDetailsToTable = await db.query(
+        `INSERT INTO employee (first_name ,last_name , department_id, role_id , manager_id) VALUES("${firstName}", "${secondName}", ${departmentId}, ${roleId}, NULL)`
+      );
     }
 
-    // Exit Application
+    //Update employee details
+
+    if (homeMenu === "updateEmployeeRole") {
+      // present a list of names to choose from
+      const listOfEmployees = await db.query(
+        "SELECT employee_role.id, employee_role.first_name, employee_role.last_name,role.department_id, name FROM employee employee_role LEFT JOIN role ON employee_role.role_id=role.id LEFT JOIN department ON role.department_id=department.id;"
+      );
+
+      const updateEmployeeQuestion = [
+        {
+          type: "list",
+          message: "Please select an employee to update:",
+          name: "employeeId",
+          choices: generateEmployeeChoices(listOfEmployees),
+        },
+      ];
+
+      //   prompt the Employee names to update info
+      const { employeeId } = await inquirer.prompt(updateEmployeeQuestion);
+
+      // provide options on what to update about the employee
+      const { updateChoices } = await inquirer.prompt(sectionToUpdate);
+
+      // update employee personal details
+      if (updateChoices === "updateDetails") {
+        const { firstName, secondName } = await inquirer.prompt(
+          updateEmployeeName
+        );
+
+        const employeeNamesUpdated = await db.query(
+          ` UPDATE employee SET first_name = '${firstName}', last_name = '${secondName}'   WHERE id = ${employeeId[0]};`
+        );
+      }
+
+      // update employee role in the same department
+      if (updateChoices === "updateRole") {
+        const roles = await db.query(
+          `SELECT id ,title FROM role WHERE department_id = ${employeeId[1]}`
+        );
+
+        const roleQuestions = [
+          {
+            type: "list",
+            message: "Please select a role:",
+            name: "roleId",
+            choices: generateRoleChoices(roles),
+          },
+        ];
+
+        const { roleId } = await inquirer.prompt(roleQuestions);
+
+        const employeeRoleUpdated = await db.query(
+          ` UPDATE employee SET role_id = ${roleId}  WHERE id = ${employeeId[0]};`
+        );
+      }
+    }
+
+    //exit app
     if (homeMenu === "exitApp") {
+      // Exit Application
       // If user wants the leave the app
       db.stop();
       return inProgress === false;

@@ -27,60 +27,35 @@ const addDepartment = [
   },
 ];
 
-const addRole = [
+const sectionToUpdate = [
   {
-    type: "input",
-    name: "roleTitle",
-    message: "Enter the role title",
-    validate: verifyResponses,
-  },
-  {
-    type: "input",
-    name: "roleSalary",
-    message: "Enter the salary for that role",
-    validate: verifyNumber,
-  },
-  {
-    type: "input",
-    name: "departmentId",
-    message: "Which department is this role linked to?",
-    validate: verifyNumber,
+    type: "list",
+    name: "updateChoices",
+    message: "What would you like to do?",
+    choices: [
+      { name: "Department", value: "UpdateDepartment" },
+      { name: "Role", value: "updateRole" },
+      { name: "Employee Details", value: "updateDetails" },
+    ],
   },
 ];
 
-const addEmployee = [
+const updateEmployeeName = [
   {
     type: "input",
     name: "firstName",
-    message: "Enter the employees first name",
-    validate: verifyResponses,
+    message: "Update Employee First Name",
   },
   {
     type: "input",
     name: "secondName",
-    message: "Enter the employees second name",
-    validate: verifyResponses,
-  },
-  {
-    type: "input",
-    name: "departmentId",
-    message: "Which department (id) does this employee belong to?",
-    validate: verifyNumber,
-  },
-  {
-    type: "input",
-    name: "roleId",
-    message: "Which role (id) does this employee work as?",
-    validate: verifyResponses,
+    message: "Update Employee Second Name",
   },
 ];
 
-const exitApplication = [
-  {
-    type: "confirm",
-    name: "exitApp",
-    message: "Would you like to exit the Application ?",
-  },
-];
-
-module.exports = { menu, exitApplication, addDepartment, addRole, addEmployee };
+module.exports = {
+  menu,
+  addDepartment,
+  sectionToUpdate,
+  updateEmployeeName,
+};
