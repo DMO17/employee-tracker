@@ -3,11 +3,17 @@ const inquirer = require("inquirer");
 const Db = require("./connection/connection");
 
 const {
+  generateDepartmentChoices,
+  generateRoleChoices,
+  generateEmployeeChoices,
+} = require("./helper/util");
+
+const {
   menu,
   addDepartment,
   sectionToUpdate,
   updateEmployeeName,
-} = require("./helper/questions");
+} = require("./inquirerQuestions/questions");
 
 //create a new instance of the Db class to use the start , stop and query methods
 const db = new Db({
@@ -16,33 +22,6 @@ const db = new Db({
   password: process.envDB_PASSWORD || "Password123!!",
   database: process.envDB_NAME || "company_db",
 });
-
-const generateDepartmentChoices = (departmentsFromDB) => {
-  return departmentsFromDB.map((department) => {
-    return {
-      name: department.name,
-      value: department.id,
-    };
-  });
-};
-
-const generateRoleChoices = (rolesFromDB) => {
-  return rolesFromDB.map((roles) => {
-    return {
-      name: roles.title,
-      value: roles.id,
-    };
-  });
-};
-
-const generateEmployeeChoices = (employeesFromDB) => {
-  return employeesFromDB.map((employee) => {
-    return {
-      name: `${employee.first_name} ${employee.last_name}: ${employee.name} `,
-      value: [employee.id, employee.department_id],
-    };
-  });
-};
 
 const start = async () => {
   let inProgress = true;
@@ -226,6 +205,42 @@ const start = async () => {
 
         const employeeRoleUpdated = await db.query(
           ` UPDATE employee SET role_id = ${roleId}  WHERE id = ${employeeId[0]};`
+        );
+      }
+
+      // update employee department
+
+      if (updateChoices === "UpdateDepartment") {
+        const departments = await db.query("SELECT * FROM department");
+
+        const departmentQuestions = [
+          {
+            type: "list",
+            message: "Please select a department:",
+            name: "departmentId",
+            choices: generateDepartmentChoices(departments),
+          },
+        ];
+
+        const { departmentId } = await inquirer.prompt(departmentQuestions);
+
+        const roles = await db.query(
+          `SELECT id ,title FROM role WHERE department_id = ${departmentId}`
+        );
+
+        const roleQuestions = [
+          {
+            type: "list",
+            message: "Please select a role:",
+            name: "roleId",
+            choices: generateRoleChoices(roles),
+          },
+        ];
+
+        const { roleId } = await inquirer.prompt(roleQuestions);
+
+        const employeeDepartmentUpdated = await db.query(
+          ` UPDATE employee SET role_id = ${roleId} , department_id = ${departmentId}  WHERE id = ${employeeId[0]};`
         );
       }
     }
