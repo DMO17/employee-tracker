@@ -63,7 +63,7 @@ const start = async () => {
       const { departmentName } = await inquirer.prompt(addDepartment);
 
       const addDepartmentNameToTable = await db.query(
-        `INSERT INTO department(name) VALUE("${departmentName}";)`
+        `INSERT INTO department(name) VALUE("${departmentName}");`
       );
     }
 

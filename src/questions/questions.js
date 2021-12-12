@@ -45,11 +45,13 @@ const updateEmployeeName = [
     type: "input",
     name: "firstName",
     message: "Update Employee First Name",
+    validate: verifyResponses,
   },
   {
     type: "input",
     name: "secondName",
     message: "Update Employee Second Name",
+    validate: verifyResponses,
   },
 ];
 
@@ -65,11 +67,13 @@ const constructRoleQuestions = (generateDepartmentChoices, departments) => {
       type: "input",
       message: "Enter the role title:",
       name: "title",
+      validate: verifyResponses,
     },
     {
       type: "input",
       message: "Enter the salary for that role:",
       name: "salary",
+      validate: verifyNumber,
     },
   ];
 };
@@ -100,11 +104,13 @@ const constructEmployeeQuestions = (generateRoleChoices, roles) => {
       type: "input",
       message: "Enter First Name:",
       name: "firstName",
+      validate: verifyResponses,
     },
     {
       type: "input",
       message: "Enter Second Name:",
       name: "secondName",
+      validate: verifyResponses,
     },
   ];
 };

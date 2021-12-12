@@ -6,7 +6,7 @@ This is a command line application that manages a companies employee database us
 
 ## Video :
 
-To see how the application works <a href='https://drive.google.com/file/d/1q_TScQRFzEW_PS5WdH32OBf1BJZ3ecrJ/view?usp=sharing'>click here </a>
+To see how the application works <a href='https://drive.google.com/file/d/1T8juFqB1MvFMToUagMeRDp75ay46f5Pt/view?usp=sharing'>click here </a>
 
 ## User Story
 
